@@ -55,14 +55,14 @@ export default function Skills() {
           subtitle="Teknologi dan tools yang saya gunakan sehari-hari untuk membangun produk."
         />
 
-        <div ref={ref} className="grid md:grid-cols-2 gap-6 mb-14">
+        <div ref={ref} className="flex justify-center mb-14">
           {skillGroups.map((group, gi) => (
             <motion.div
               key={group.category}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: gi * 0.15 }}
-              className="bg-surface border border-white/8 rounded-2xl p-6 hover:border-primary/30 transition-colors"
+              className="w-full max-w-4xl bg-surface border border-white/8 rounded-2xl p-6 hover:border-primary/30 transition-colors"
             >
               <div className="flex items-center gap-2 mb-5">
                 <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${group.color}`} />
