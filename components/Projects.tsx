@@ -27,25 +27,27 @@ type Project = {
   desc: string;
   tags: string[];
   github: string;
+  githubFrontend?: string;
   demo: string;
   color: string;
 };
 
 const projects: Project[] = [
   {
-    title: "E-Commerce Platform",
-    desc: "Platform belanja online full-featured dengan manajemen produk, keranjang, payment gateway Midtrans, dan dashboard admin.",
-    tags: ["Next.js", "TypeScript", "Prisma", "PostgreSQL"],
-    github: "https://github.com",
-    demo: "https://demo.com",
+    title: "Web-TumbuhKembang",
+    desc: "web yang berfungsi untuk memantau tumbuh kembang anak, dengan fitur login, dashboard, vaksinasi,stimulan,tips dan laporan perkembangan anak.",
+    tags: [ "React 18", "Vite", "Laravel 11", "MySQL", "Sanctum", "Recharts", "Axios", "Railway", "Vercel"],
+    github: "https://github.com/RahmanAprian/TumbuhKembang-backend",
+    githubFrontend: "https://github.com/RahmanAprian/TumbuhKembang_frontend",
+    demo: "https://web-tumbuhkembang.vercel.app",
     color: "from-primary/20 to-accent/10",
   },
   {
     title: "Task Management App",
     desc: "Aplikasi manajemen tugas tim dengan fitur drag-and-drop, real-time update, dan kolaborasi multi-user.",
-    tags: ["React", "Node.js", "Socket.io", "MongoDB"],
+    tags: [ "React 18", "Vite", "Laravel 11", "MySQL", "Sanctum", "Recharts", "Axios", "Railway", "Vercel"],
     github: "https://github.com",
-    demo: "https://demo.com",
+    demo: "https://task-management-app.vercel.app",
     color: "from-accent/20 to-purple-500/10",
   },
 ];
