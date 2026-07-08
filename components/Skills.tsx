@@ -8,6 +8,7 @@ const skillGroups = [
     category: "Tech Stack",
     color: "from-primary to-primary-light",
     skills: [
+      { name: "Laravel", level: 90 },
       { name: "React / Next.js", level: 90 },
       { name: "TypeScript", level: 82 },
       { name: "Tailwind CSS", level: 88 },
@@ -17,7 +18,7 @@ const skillGroups = [
 ];
 
 const techStack = [
-  "React", "Next.js", "TypeScript", "Node.js", "Tailwind CSS"
+  "React", "Next.js", "TypeScript", "Node.js", "Tailwind CSS", "Laravel", "MySQL", "Supabase", "Firebase", "Vite", "HTML", "CSS", "JavaScript", "PHP", "Bootstrap", "Material Design", "Vercel"
 ];
 
 function SkillBar({ name, level, color, delay }: { name: string; level: number; color: string; delay: number }) {

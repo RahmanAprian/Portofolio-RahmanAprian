@@ -3,24 +3,43 @@ import { useState, useRef, FormEvent } from "react";
 import { motion, useInView } from "framer-motion";
 import { FiMail, FiMapPin, FiSend, FiCheckCircle } from "react-icons/fi";
 import { SectionHeader } from "./About";
+import emailjs from "@emailjs/browser";
+
+const EMAILJS_SERVICE_ID = "service_t9bs31o";
+const EMAILJS_TEMPLATE_ID = "5knf53b";
+const EMAILJS_PUBLIC_KEY = "G6ItjERGIbRMhuZ1Y";
 
 const contactInfo = [
-  { icon: FiMail, label: "Email", value: "Aprianrahman8@email.com", href: "mailto:Aprianrahman8@email.com" },
+  { icon: FiMail, label: "Email", value: "aprianrahman8@gmail.com", href: "mailto:aprianrahman8@gmail.com" },
   { icon: FiMapPin, label: "Lokasi", value: "Palembang, Indonesia", href: "#" },
 ];
 
 export default function Contact() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-  const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setStatus("loading");
-    // Simulate sending — replace with your API route or EmailJS
-    await new Promise((r) => setTimeout(r, 1500));
-    setStatus("done");
+
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: form.name,
+          from_email: form.email,
+          subject: form.subject,
+          message: form.message,
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+      setStatus("done");
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -33,25 +52,21 @@ export default function Contact() {
         />
 
         <div ref={ref} className="grid md:grid-cols-5 gap-10">
-          {/* Left info panel */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7 }}
             className="md:col-span-2 flex flex-col gap-6"
           >
-            <div>
-              <p className="text-muted leading-relaxed">
-                Saya terbuka untuk diskusi proyek, kolaborasi, freelance, maupun pertanyaan umum.
-                Biasanya saya membalas dalam 24 jam.
-              </p>
-            </div>
+            <p className="text-muted leading-relaxed">
+              Saya terbuka untuk diskusi proyek, kolaborasi, freelance, maupun pertanyaan umum.
+              Biasanya saya membalas dalam 24 jam.
+            </p>
 
             <div className="flex flex-col gap-3">
               {contactInfo.map(({ icon: Icon, label, value, href }) => (
                 <a
                   key={label}
-                  id={label === "Email" ? "contact-email" : undefined}
                   href={href}
                   className="flex items-center gap-4 p-4 bg-surface border border-white/8 rounded-xl hover:border-primary/40 transition-colors group"
                 >
@@ -66,7 +81,6 @@ export default function Contact() {
               ))}
             </div>
 
-            {/* Availability card */}
             <div className="p-5 bg-surface border border-primary/20 rounded-xl">
               <div className="flex items-center gap-2 mb-2">
                 <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
@@ -78,7 +92,6 @@ export default function Contact() {
             </div>
           </motion.div>
 
-          {/* Form */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
@@ -105,6 +118,12 @@ export default function Contact() {
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                {status === "error" && (
+                  <div className="px-4 py-3 bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-xl">
+                    Gagal mengirim pesan. Coba lagi beberapa saat.
+                  </div>
+                )}
+
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs text-muted">Nama</label>
