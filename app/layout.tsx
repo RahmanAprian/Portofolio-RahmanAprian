@@ -5,7 +5,16 @@ export const metadata: Metadata = {
   title: "Rahman Aprian | Fullstack Web Developer Palembang",
   description:
     "Rahman Aprian — Fullstack Web Developer asal Palembang, Indonesia. Spesialis React, Next.js, Laravel, dan Node.js. Terbuka untuk proyek freelance dan kolaborasi.",
-  keywords: [
+  icons: {
+  icon: [
+    { url: "/profile.jpeg", type: "image/jpeg" },
+  ],
+  apple: [
+    { url: "/profile.jpeg" },
+  ],
+  shortcut: "/profile.jpeg",
+},
+    keywords: [
     "Rahman Aprian",
     "Rahman Aprian developer",
     "Fullstack Developer Palembang",

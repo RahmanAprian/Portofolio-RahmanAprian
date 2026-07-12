@@ -75,23 +75,20 @@ export default function About() {
             </a>
           </motion.div>
 
-          {/* Right: stats + traits */}
+          {/* Right: traits */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.15 }}
-            className="flex flex-col gap-6"
+            className="grid grid-cols-2 gap-3"
           >
-            {/* Traits */}
-            <div className="grid grid-cols-2 gap-3">
-              {traits.map(({ icon: Icon, title, desc }) => (
-                <div key={title} className="bg-surface-2 border border-white/6 rounded-xl p-4 hover:border-primary/30 transition-colors">
-                  <Icon size={18} className="text-primary mb-2" />
-                  <div className="text-sm font-medium text-white">{title}</div>
-                  <div className="text-xs text-muted mt-1 leading-relaxed">{desc}</div>
-                </div>
-              ))}
-            </div>
+            {traits.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="bg-surface-2 border border-white/6 rounded-xl p-4 hover:border-primary/30 transition-colors">
+                <Icon size={18} className="text-primary mb-2" />
+                <div className="text-sm font-medium text-white">{title}</div>
+                <div className="text-xs text-muted mt-1 leading-relaxed">{desc}</div>
+              </div>
+            ))}
           </motion.div>
         </div>
       </div>
