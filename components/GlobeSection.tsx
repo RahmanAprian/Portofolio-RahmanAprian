@@ -1,15 +1,16 @@
 "use client";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
 import createGlobe from "cobe";
 
 export default function GlobeSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const globeRef = useRef<ReturnType<typeof createGlobe> | null>(null);
-  const pointerRef = useRef({ x: 0, y: 0 });
   const phiRef = useRef(2.0);
+  const thetaRef = useRef(0.2);
   const isDraggingRef = useRef(false);
-  const lastPointerRef = useRef({ x: 0, y: 0 });
+  const lastXRef = useRef(0);
+  const lastYRef = useRef(0);
 
   const sectionRef = useRef(null);
   const inView = useInView(sectionRef, { once: true, margin: "-60px" });
@@ -25,7 +26,7 @@ export default function GlobeSection() {
       width: width * (window.devicePixelRatio || 2),
       height: width * (window.devicePixelRatio || 2),
       phi: phiRef.current,
-      theta: 0.2,
+      theta: thetaRef.current,
       dark: 1,
       diffuse: 1.4,
       mapSamples: 20000,
@@ -52,7 +53,7 @@ export default function GlobeSection() {
           phiRef.current += 0.004;
         }
         state.phi = phiRef.current;
-        state.theta = pointerRef.current.y * 0.5;
+        state.theta = thetaRef.current;
         state.width = width * (window.devicePixelRatio || 2);
         state.height = width * (window.devicePixelRatio || 2);
       },
@@ -61,54 +62,36 @@ export default function GlobeSection() {
     canvas.style.width = "100%";
     canvas.style.height = "100%";
 
-    const onMouseDown = (e: MouseEvent) => {
-      isDraggingRef.current = true;
-      lastPointerRef.current = { x: e.clientX, y: e.clientY };
-    };
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDraggingRef.current) return;
-      const dx = e.clientX - lastPointerRef.current.x;
-      const dy = e.clientY - lastPointerRef.current.y;
-      phiRef.current -= dx * 0.008;
-      pointerRef.current.y -= dy * 0.005;
-      pointerRef.current.y = Math.max(-0.6, Math.min(0.6, pointerRef.current.y));
-      lastPointerRef.current = { x: e.clientX, y: e.clientY };
-    };
-    const onMouseUp = () => { isDraggingRef.current = false; };
-    const onTouchStart = (e: TouchEvent) => {
-      isDraggingRef.current = true;
-      lastPointerRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      if (!isDraggingRef.current) return;
-      const dx = e.touches[0].clientX - lastPointerRef.current.x;
-      const dy = e.touches[0].clientY - lastPointerRef.current.y;
-      phiRef.current -= dx * 0.008;
-      pointerRef.current.y -= dy * 0.005;
-      pointerRef.current.y = Math.max(-0.6, Math.min(0.6, pointerRef.current.y));
-      lastPointerRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    };
-    const onTouchEnd = () => { isDraggingRef.current = false; };
     const onResize = () => { width = canvas.offsetWidth; };
-
-    canvas.addEventListener("mousedown", onMouseDown);
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
-    canvas.addEventListener("touchstart", onTouchStart, { passive: true });
-    canvas.addEventListener("touchmove", onTouchMove, { passive: true });
-    canvas.addEventListener("touchend", onTouchEnd);
     window.addEventListener("resize", onResize);
 
     return () => {
       globeRef.current?.destroy();
-      canvas.removeEventListener("mousedown", onMouseDown);
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
-      canvas.removeEventListener("touchstart", onTouchStart);
-      canvas.removeEventListener("touchmove", onTouchMove);
-      canvas.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("resize", onResize);
     };
+  }, []);
+
+  // Pointer events on the canvas div wrapper
+  const onPointerDown = useCallback((e: React.PointerEvent) => {
+    isDraggingRef.current = true;
+    lastXRef.current = e.clientX;
+    lastYRef.current = e.clientY;
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+  }, []);
+
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    if (!isDraggingRef.current) return;
+    const dx = e.clientX - lastXRef.current;
+    const dy = e.clientY - lastYRef.current;
+    phiRef.current -= dx * 0.008;
+    thetaRef.current -= dy * 0.005;
+    thetaRef.current = Math.max(-0.6, Math.min(0.6, thetaRef.current));
+    lastXRef.current = e.clientX;
+    lastYRef.current = e.clientY;
+  }, []);
+
+  const onPointerUp = useCallback(() => {
+    isDraggingRef.current = false;
   }, []);
 
   return (
@@ -123,8 +106,16 @@ export default function GlobeSection() {
           🌏 Open for remote worldwide
         </span>
 
-        <div className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
-          <div className="absolute inset-0 rounded-full bg-primary/10 blur-3xl scale-75" />
+        {/* Globe wrapper — pointer events di sini */}
+        <div
+          className="relative w-full select-none"
+          style={{ aspectRatio: "1 / 1", touchAction: "none" }}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerLeave={onPointerUp}
+        >
+          <div className="absolute inset-0 rounded-full bg-primary/10 blur-3xl scale-75 pointer-events-none" />
           <canvas
             ref={canvasRef}
             className="w-full h-full cursor-grab active:cursor-grabbing"
