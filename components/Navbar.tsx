@@ -18,7 +18,6 @@ export default function Navbar() {
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 40);
-      // Update active section
       const sections = links.map((l) => l.href.replace("#", ""));
       for (const id of [...sections].reverse()) {
         const el = document.getElementById(id);
@@ -31,6 +30,16 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const handleMobileLink = (href: string) => {
+    setMenuOpen(false);
+    // Delay sedikit biar menu tutup dulu sebelum scroll
+    setTimeout(() => {
+      const id = href.replace("#", "");
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 150);
+  };
 
   return (
     <motion.nav
@@ -46,19 +55,19 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <a href="#home" className="font-mono font-medium text-lg">
-          <span style={{ color: '#00e6ff', textShadow: '0 0 10px rgba(0,230,255,0.85)' }} className="font-bold">RahmanAprian</span>
+          <span style={{ color: '#00e6ff', textShadow: '0 0 10px rgba(0,230,255,0.85)' }} className="font-bold">
+            RahmanAprian
+          </span>
         </a>
 
-        {/* Desktop links */}
+        {/* Desktop links — tidak diubah */}
         <ul className="hidden md:flex items-center gap-1">
           {links.map((link) => (
             <li key={link.href}>
               <a
                 href={link.href}
                 className={`relative px-4 py-2 text-sm rounded-lg transition-colors duration-200 ${
-                  active === link.href
-                    ? "text-white"
-                    : "text-muted hover:text-white"
+                  active === link.href ? "text-white" : "text-muted hover:text-white"
                 }`}
               >
                 {active === link.href && (
@@ -74,7 +83,7 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* CTA */}
+        {/* CTA desktop */}
         <a
           href="#contact"
           className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary hover:bg-primary-light text-white rounded-lg transition-colors duration-200"
@@ -82,9 +91,9 @@ export default function Navbar() {
           Hire Me
         </a>
 
-        {/* Mobile burger */}
+        {/* Mobile burger — area tap diperbesar */}
         <button
-          className="md:hidden text-muted hover:text-white transition-colors"
+          className="md:hidden p-3 -mr-2 text-muted hover:text-white transition-colors"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
@@ -107,22 +116,32 @@ export default function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-surface/95 backdrop-blur-md border-b border-white/5"
           >
-            <ul className="flex flex-col px-6 py-4 gap-2">
+            <ul className="flex flex-col px-4 py-3 gap-1">
               {links.map((link) => (
                 <li key={link.href}>
-                  <a
-                    href={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    className={`block px-4 py-2 rounded-lg text-sm transition-colors ${
+                  {/* Area tap diperbesar, pakai button agar lebih reliable di HP */}
+                  <button
+                    onClick={() => handleMobileLink(link.href)}
+                    className={`w-full text-left px-4 py-4 rounded-xl text-base font-medium transition-colors ${
                       active === link.href
                         ? "bg-primary/15 text-white border border-primary/30"
-                        : "text-muted hover:text-white"
+                        : "text-muted hover:text-white hover:bg-white/5"
                     }`}
                   >
                     {link.label}
-                  </a>
+                  </button>
                 </li>
               ))}
+
+              {/* Hire Me button di mobile */}
+              <li className="mt-2 pt-2 border-t border-white/8">
+                <button
+                  onClick={() => handleMobileLink("#contact")}
+                  className="w-full px-4 py-4 bg-primary hover:bg-primary-light text-white font-medium rounded-xl transition-colors text-base"
+                >
+                  Hire Me
+                </button>
+              </li>
             </ul>
           </motion.div>
         )}
