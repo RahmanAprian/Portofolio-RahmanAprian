@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import createGlobe from "cobe";
 
@@ -11,6 +11,7 @@ export default function GlobeSection() {
   const isDraggingRef = useRef(false);
   const lastXRef = useRef(0);
   const lastYRef = useRef(0);
+  const [dragging, setDragging] = useState(false);
 
   const sectionRef = useRef(null);
   const inView = useInView(sectionRef, { once: true, margin: "-60px" });
@@ -71,9 +72,9 @@ export default function GlobeSection() {
     };
   }, []);
 
-  // Pointer events on the canvas div wrapper
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     isDraggingRef.current = true;
+    setDragging(true);
     lastXRef.current = e.clientX;
     lastYRef.current = e.clientY;
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
@@ -92,6 +93,7 @@ export default function GlobeSection() {
 
   const onPointerUp = useCallback(() => {
     isDraggingRef.current = false;
+    setDragging(false);
   }, []);
 
   return (
@@ -106,14 +108,18 @@ export default function GlobeSection() {
           🌏 Open for remote worldwide
         </span>
 
-        {/* Globe wrapper — pointer events di sini */}
+        {/* touchAction: "none" hanya saat drag, bukan selamanya */}
         <div
           className="relative w-full select-none"
-          style={{ aspectRatio: "1 / 1", touchAction: "none" }}
+          style={{
+            aspectRatio: "1 / 1",
+            touchAction: dragging ? "none" : "auto",
+          }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerLeave={onPointerUp}
+          onPointerCancel={onPointerUp}
         >
           <div className="absolute inset-0 rounded-full bg-primary/10 blur-3xl scale-75 pointer-events-none" />
           <canvas

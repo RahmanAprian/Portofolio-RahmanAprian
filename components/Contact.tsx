@@ -5,8 +5,8 @@ import { FiMail, FiMapPin, FiSend, FiCheckCircle } from "react-icons/fi";
 import { SectionHeader } from "./About";
 import emailjs from "@emailjs/browser";
 
-const EMAILJS_SERVICE_ID = "service_t9bs31o";
-const EMAILJS_TEMPLATE_ID = "5knf53b";
+const EMAILJS_SERVICE_ID = "service_xhm9sz8";
+const EMAILJS_TEMPLATE_ID = "template_jjdq9qz";
 const EMAILJS_PUBLIC_KEY = "G6ItjERGIbRMhuZ1Y";
 
 const contactInfo = [

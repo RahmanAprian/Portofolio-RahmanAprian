@@ -73,7 +73,7 @@ export default function Hero() {
               Lihat Proyek
             </a>
             <a
-              href="#contact-email"
+              href="#contact"
               className="flex items-center gap-2 px-6 py-3 border border-white/15 hover:border-primary/50 text-white font-medium rounded-xl transition-all duration-200 hover:-translate-y-0.5"
             >
               Contact ME
