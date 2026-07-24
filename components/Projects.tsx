@@ -43,12 +43,12 @@ const projects: Project[] = [
     color: "from-primary/20 to-accent/10",
   },
   {
-    title: "Task Management App",
-    desc: "Aplikasi manajemen tugas tim dengan fitur drag-and-drop, real-time update, dan kolaborasi multi-user.",
-    tags: [ "React 18", "Vite", "Laravel 11", "MySQL", "Sanctum", "Recharts", "Axios", "Railway", "Vercel"],
-    github: "https://github.com",
-    demo: "https://task-management-app.vercel.app",
-    color: "from-accent/20 to-purple-500/10",
+    title: "Web-Seblak-NusantaraHeat",
+    desc: "Sistem penjualan seblak online full-stack dengan dua aktor (admin & pelanggan): landing page publik, dashboard pelanggan untuk memesan dengan level pedas, dan dashboard admin untuk kelola pesanan, stok menu, serta bahan baku.",
+    tags: ["React 18", "Vite", "Laravel 12", "MySQL", "Sanctum", "Bootstrap", "Railway", "Vercel"],
+    github: "https://github.com/RahmanAprian/web-seblak-nusantara-heat",
+    demo: "https://web-seblak-nusantara-heat.vercel.app",
+    color: "from-red-500/20 to-orange-500/10",
   },
 ];
 
